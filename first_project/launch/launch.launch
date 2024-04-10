@@ -11,8 +11,8 @@
         <remap from="/gps/fix" to="/fix" />
         <remap from="/odom" to="/gps_odom" />
 
-        <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find first_project)/rviz/enu_config.rviz"/>
- -->
+       
+
     </node>
 </launch>
 

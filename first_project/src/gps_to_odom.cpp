@@ -6,6 +6,8 @@
 #include <sensor_msgs/NavSatFix.h>
 #include <tf/transform_broadcaster.h>
 
+ros::Publisher odom_pub; // Global publisher object
+
 const double R_EARTH = 6378137.0;   // Earth's radius in meters
 const double E2 = 0.00669437999014; // Square of eccentricity
 
@@ -63,15 +65,29 @@ void gpsCallback(const sensor_msgs::NavSatFix::ConstPtr &msg)
     // Convert ECEF coordinates to ENU
     ECEFToENU(x, y, z, lat_r, lon_r, alt_r, e, n, u);
 
-    // Publish the ENU coordinates as odometry
-    // Iintegrate it with ROS odometry message
-    ROS_INFO("ENU Coordinates: E: %f, N: %f, U: %f", e, n, u);
+    // Create an odometry message
+    nav_msgs::Odometry odom_msg;
+    odom_msg.header.stamp = ros::Time::now();
+    odom_msg.header.frame_id = "enu";
+
+    // Set position in the odometry message
+    odom_msg.pose.pose.position.x = e;
+    odom_msg.pose.pose.position.y = n;
+    odom_msg.pose.pose.position.z = u;
+
+    // Publish the message
+    odom_pub.publish(odom_msg);
+
+    ROS_INFO("Published ENU Coordinates as Odometry: E: %f, N: %f, U: %f", e, n, u);
 }
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "gps_to_odom");
     ros::NodeHandle nh;
+
+    // Initialize the publisher
+    odom_pub = nh.advertise<nav_msgs::Odometry>("gps_odom", 50); // Topic name and queue size
 
     // Subscribe to GPS data
     ros::Subscriber gps_sub = nh.subscribe("fix", 1000, gpsCallback);
