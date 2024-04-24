@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/NavSatFix.h>
