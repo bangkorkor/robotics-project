@@ -143,6 +143,9 @@ include_directories(
 add_executable(gps_to_odom src/gps_to_odom.cpp)
 target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
 
+add_executable(odom_to_tf src/odom_to_tf.cpp)
+target_link_libraries(odom_to_tf ${catkin_LIBRARIES})
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
