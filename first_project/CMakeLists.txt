@@ -16,11 +16,17 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
+  sensor_msgs
+  dynamic_reconfigure
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+## Generate dynamic reconfigure parameters in the 'cfg' folder
+generate_dynamic_reconfigure_options(
+  cfg/LidarFrameConfig.cfg
+)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -112,6 +118,7 @@ catkin_package(
 #  LIBRARIES first_project
 #  CATKIN_DEPENDS nav_msgs roscpp rospy std_msgs tf
 #  DEPENDS system_lib
+CATKIN_DEPENDS roscpp sensor_msgs dynamic_reconfigure
 )
 
 ###########
@@ -145,6 +152,18 @@ target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
 
 add_executable(odom_to_tf src/odom_to_tf.cpp)
 target_link_libraries(odom_to_tf ${catkin_LIBRARIES})
+
+# Declare the executable
+add_executable(lidar_remap src/lidar_remap.cpp)
+
+# Add dependencies to ensure messages are built first
+add_dependencies(lidar_remap ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+# Specify libraries to link against
+target_link_libraries(lidar_remap ${catkin_LIBRARIES})
+
+# Ensure dynamic reconfigure header files are built before your executable
+add_dependencies(lidar_remap ${PROJECT_NAME}_gencfg)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

@@ -19,6 +19,13 @@
         <remap from="input_odom" to="gps_odom"/>
     </node>
 
+    <node pkg="first_project" type="lidar_remap" name="lidar_remap" output="screen">
+    </node>
+
+<!-- Launch rviz-->
+ <node name="rviz" pkg="rviz" type="rviz" />
+
+
 
 </launch>
 
