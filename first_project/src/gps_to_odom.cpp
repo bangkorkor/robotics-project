@@ -49,6 +49,7 @@ void ECEFToENU(double x, double y, double z, double latRef, double lonRef, doubl
 }
 
 // GPS callback function
+// GPS callback function
 void gpsCallback(const sensor_msgs::NavSatFix::ConstPtr &msg)
 {
     double e, n, u;
@@ -73,6 +74,12 @@ void gpsCallback(const sensor_msgs::NavSatFix::ConstPtr &msg)
     odom_msg.pose.pose.position.x = e;
     odom_msg.pose.pose.position.y = n;
     odom_msg.pose.pose.position.z = u;
+
+    // Set orientation in the odometry message
+    odom_msg.pose.pose.orientation.x = 0.0;
+    odom_msg.pose.pose.orientation.y = 0.0;
+    odom_msg.pose.pose.orientation.z = 0.0;
+    odom_msg.pose.pose.orientation.w = 1.0;
 
     // Publish the message
     odom_pub.publish(odom_msg);
