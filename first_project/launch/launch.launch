@@ -1,18 +1,24 @@
 <launch>
     <!-- Launch the gps_to_odom node -->
     <node name="gps_to_odom" pkg="first_project" type="gps_to_odom" output="screen">
-
         <!-- Set parameters for GPS to Odometry conversion -->
         <param name="lat_ref" value="48.8582" />
         <param name="lon_ref" value="2.2945" />
         <param name="alt_ref" value="100.0" />
-
-        <!-- Remap topics if necessary -->
-        <remap from="/gps/fix" to="/fix" />
-        <remap from="/odom" to="/gps_odom" />
-
-       
-
     </node>
+
+    <node pkg="first_project" type="odom_to_tf" name="odom_to_tf_encoders" output="screen">
+        <param name="root_frame" type="string" value="world"/>
+        <param name="child_frame" type="string" value="wheel_odom"/>
+        <remap from="input_odom" to="odom"/>
+    </node>
+
+    <node pkg="first_project" type="odom_to_tf" name="odom_to_tf_gps" output="screen">
+        <param name="root_frame" type="string" value="world"/>
+        <param name="child_frame" type="string" value="gps_odom"/>
+        <remap from="input_odom" to="gps_odom"/>
+    </node>
+
+
 </launch>
 
