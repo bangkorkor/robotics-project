@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <dynamic_reconfigure/server.h>
-#include <first_project/LidarFrameConfig.h>
+#include <first_project/configConfig.h>
 
 class LidarRemap
 {
@@ -13,7 +13,7 @@ public:
         sub_ = nh_.subscribe("/os_cloud_node/points", 1, &LidarRemap::pointCloudCallback, this);
 
         // Dynamic reconfigure server
-        dynamic_reconfigure::Server<first_project::LidarFrameConfig>::CallbackType f;
+        dynamic_reconfigure::Server<first_project::configConfig>::CallbackType f;
         f = boost::bind(&LidarRemap::configCallback, this, _1, _2);
         server_.setCallback(f);
     }
@@ -25,7 +25,7 @@ public:
         pub_.publish(cloud_modified);
     }
 
-    void configCallback(first_project::LidarFrameConfig &config, uint32_t level)
+    void configCallback(first_project::configConfig &config, uint32_t level)
     {
         frame_id_ = config.frame_id;
     }
@@ -34,7 +34,7 @@ private:
     ros::NodeHandle nh_;
     ros::Publisher pub_;
     ros::Subscriber sub_;
-    dynamic_reconfigure::Server<first_project::LidarFrameConfig> server_;
+    dynamic_reconfigure::Server<first_project::configConfig> server_;
     std::string frame_id_;
 };
 
