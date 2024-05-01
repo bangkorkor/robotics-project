@@ -8,8 +8,10 @@
 
 ros::Publisher odom_pub; // Global publisher object
 
-const double R_EARTH = 6378137.0;   // Earth's radius in meters
-const double E2 = 0.00669437999014; // Square of eccentricity
+const double a = 6378137; //[m] semi major axis
+const double b = 6356752; //[m] semi minor axis
+
+
 
 // Convert degrees to radians
 inline double deg2rad(double degrees)
@@ -22,13 +24,12 @@ void LLAToECEF(double latitude, double longitude, double altitude, double &x, do
 {
     latitude = deg2rad(latitude);
     longitude = deg2rad(longitude);
-    double a = R_EARTH; // Semi-major axis
-    double e2 = E2;     // Square of eccentricity
-    double N = a / sqrt(1 - e2 * sin(latitude) * sin(latitude));
+    const double E2 = 1 - (b*b)/(a*a); // Square of eccentricity
+    double N = a / sqrt(1 - E2 * sin(latitude) * sin(latitude));
 
     x = (N + altitude) * cos(latitude) * cos(longitude);
     y = (N + altitude) * cos(latitude) * sin(longitude);
-    z = ((1 - e2) * N + altitude) * sin(latitude);
+    z = ((1 - E2) * N + altitude) * sin(latitude);
 }
 
 // ECEF to ENU conversion
