@@ -1,0 +1,37 @@
+<launch>
+  <param name="use_sim_time" value="true"/>
+
+  <node pkg="gmapping" type="slam_gmapping" name="gmapping" output="screen">
+    <remap from="scan" to="/base_scan" />
+    <param name="xmax" value="5"/>
+    <param name="ymax" value="5"/>
+    <param name="xmin" value="-5"/>
+    <param name="ymin" value="-5"/>
+    <param name="delta" value="0.05"/>
+    <param name="base_frame" value="UGV_base_link"/>
+    <param name="odom_frame" value="UGV_odom"/>
+  </node>
+
+ 
+
+  <!-- odom_to_tf node -->
+  <node pkg="second_project" type = "odom_to_tf2" name = "odom_of_encoders" output="screen">
+    <remap from="/input_odom" to="/ugv/odom"  />
+    <param name="root_frame" type="str" value="UGV_odom" />
+    <param name="child_frame" type="str" value="UGV_base_link" />
+  </node>
+
+  <!--  tf broadcaster  -->
+  <node pkg="tf" type="static_transform_publisher" name="rslidar_broadcaster" args="0 0 0 0 0 0 1 UGV_base_link rslidar 100" />
+
+  <!--  pointcloud_to_laserscan node -->
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" output="screen">
+    <remap from="cloud_in" to="/ugv/rslidar_points"/>
+    <remap from="scan" to="/base_scan"/>
+    <param name="target_frame" value="rslidar"/>
+  </node>
+  
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find second_project)/rviz/rviz_config.rviz"/>
+
+
+</launch>
