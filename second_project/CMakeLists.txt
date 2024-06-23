@@ -27,3 +27,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(odom_to_tf2 src/odom_to_tf2.cpp)
 target_link_libraries(odom_to_tf2 ${catkin_LIBRARIES})
+
+add_executable(goalpose_client goalpose_client.cpp)
+target_link_libraries(goalpose_client ${catkin_LIBRARIES})
