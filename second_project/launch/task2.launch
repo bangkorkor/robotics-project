@@ -1,5 +1,6 @@
 
 <launch>
+  <param name="/use_sim_time" value="true"/>
 
 <node name="goalpose_client" pkg="second_project" type="goalpose_client"  output ="screen"/>
 
@@ -16,7 +17,6 @@ kobuki_hexagons_kinect kobuki_hexagons_r200 roomba_circles_asus_xtion_pro roomba
   <arg name="odom_frame_id"   default="odom"/>
   <arg name="global_frame_id" default="map"/>
 
-  <param name="/use_sim_time" value="true"/>
 
 
  <!--  ***************** Robot simulation *****************  -->

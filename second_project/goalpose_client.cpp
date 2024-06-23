@@ -41,12 +41,11 @@ std::vector<move_base_msgs::MoveBaseGoal> readGoalsFromCSV(const std::string fil
         {
             move_base_msgs::MoveBaseGoal goal;
 
-            // Set x, y, z values into the MoveBaseGoal object
             goal.target_pose.pose.position.x = std::stod(x_str);
             goal.target_pose.pose.position.y = std::stod(y_str);
             goal.target_pose.pose.position.z = 0.0;
-            goal.target_pose.pose.orientation.w = std::stod(w_str); // hier noch nicht sicher mit der Darstellung
-            // Add the goal to the vector
+            goal.target_pose.pose.orientation.w = std::stod(w_str);
+
             goals.push_back(goal);
         }
     }
@@ -60,35 +59,26 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "goal_sequence_client");
     ros::NodeHandle nh;
 
-    // Path to the CSV file containing goals
-
     std::string file_path = ros::package::getPath("second_project") + "/config/waypoints.csv";
 
-    // Read goals from CSV file
     std::vector<move_base_msgs::MoveBaseGoal> goals = readGoalsFromCSV(file_path);
 
-    // Create an action client for MoveBase
     MoveBaseClient ac("move_base", true);
 
-    // Wait for the action server to come up
     while (!ac.waitForServer(ros::Duration(5.0)))
     {
         ROS_INFO("Waiting for the move_base action server...");
     }
     ROS_INFO("move_base action server connected.");
 
-    // Iterate through the list of goals and send them one by one
     for (size_t i = 0; i < goals.size(); ++i)
     {
         move_base_msgs::MoveBaseGoal &goal = goals[i];
 
-        // Send goal to the action server
         ac.sendGoal(goal);
 
-        // Wait for the result of the goal
         ac.waitForResult();
 
-        // Evaluate the result of the goal
         if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
         {
             ROS_INFO("Goal %zu reached!", i);
